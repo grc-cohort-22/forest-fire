@@ -10,15 +10,18 @@ public class Fire {
      * Returns how long it takes for all vulnerable trees to be set on fire if a
      * match is lit at a given location.
      * 
-     * The forest is represented via a rectangular 2d char array where t represents a tree
+     * The forest is represented via a rectangular 2d char array where t represents
+     * a tree
      * and . represents an empty space.
      * 
-     * At time 0, the tree at location [matchR, matchC] is set on fire. At every subsequent
-     * time step, any tree that is adjacent (up/down/left/right) to a burning tree is also
-     * set on fire. 
+     * At time 0, the tree at location [matchR, matchC] is set on fire. At every
+     * subsequent
+     * time step, any tree that is adjacent (up/down/left/right) to a burning tree
+     * is also
+     * set on fire.
      * 
      * 
-     * EXAMPLE 
+     * EXAMPLE
      * forest:
      * 
      * t..tttt.t
@@ -32,12 +35,16 @@ public class Fire {
      * Result: 8
      * 
      * Explanation:
-     * At time 0, the tree at (2, 6) is set on fire. At time 1, its adjacent trees also catch on fire
-     * At time 2, the trees adjacent to those catch as well. At time 8, the last tree to catch is at
-     * (0,6). In this example, there is one tree that never burns, so it is not included in the time calculation.
+     * At time 0, the tree at (2, 6) is set on fire. At time 1, its adjacent trees
+     * also catch on fire
+     * At time 2, the trees adjacent to those catch as well. At time 8, the last
+     * tree to catch is at
+     * (0,6). In this example, there is one tree that never burns, so it is not
+     * included in the time calculation.
      * 
      * 
-     * @param forest a 2d array where t represents a tree and . represents the ground
+     * @param forest a 2d array where t represents a tree and . represents the
+     *               ground
      * @param matchR The row the match is lit at
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
@@ -47,54 +54,48 @@ public class Fire {
         // just a location. What other information might be useful?
 
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{matchR, matchC});
+        queue.add(new int[] { matchR, matchC });
 
         Set<int[]> visited = new HashSet<>();
 
         int depth = 0;
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             int[] location = queue.poll();
 
-            if(visited.contains(location)) continue;
+            if (visited.contains(location))
+                continue;
 
-            if(forest.length > location[0] && forest[0].length > location[1] &&
-        location[0] > 0 && location[1] > 0) continue;
+            if (forest.length > location[0] && forest[0].length > location[1] &&
+                    location[0] > 0 && location[1] > 0)
+                continue;
 
             visited.add(location);
 
+            List<int[]> neighbors = new ArrayList<>();
 
-            List<int[]> neighbors = neighbors(forest, location);
-            
+            int[][] directions = {
+                    { 0, 1 },
+                    { 0, -1 },
+                    { 1, 0 },
+                    { -1, 0 }
+            };
+
+            for (int[] direction : directions) {
+                int newR = location[0] + direction[0];
+                int newC = location[1] + direction[1];
+                if (forest[newR][newC] != 't') {
+                    continue;
+                }
+                neighbors.add(new int[] { newR, newC });
+            }
+
+            for (int[] neighbor : neighbors) {
+                queue.add(neighbor);
+            }
         }
-
-        
 
         // Implement this AND add more tests!!!
         return depth;
-    }
-
-    private static List<int[]> neighbors(char[][] forest, int[] currentLocation) {
-
-        List<int[]> neighbors = new ArrayList<>();
-
-        int[][] directions = {
-            {0, 1},
-            {0, -1},
-            {1, 0},
-            {-1, 0}
-        };
-
-        for (int[] direction : directions) {
-            int newR = currentLocation[0] + direction[0];
-            int newC = currentLocation[1] + direction[1];
-            if(forest[newR][newC] != 't') {
-                continue;
-            }
-            neighbors += new int[]{newR, newC};
-            
-        }
-
-        return neighbors;
     }
 }
