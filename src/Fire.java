@@ -1,5 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 public class Fire {
     /**
@@ -43,53 +47,40 @@ public class Fire {
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
-        boolean[][] visited = new boolean[forest.length][forest[0].length];
-        return dfs(forest, new int[]{matchR, matchC}, visited, 0);
-    }
-
-    private static int dfs(char[][] forest, int[] current, boolean[][] visited, int maxDistance) {
-        int curR = current[0];
-        int curC = current[1];
-        if (visited[curR][curC]) return maxDistance;
-        visited[curR][curC] = true;
-        for (int[] move : possibleMoves(forest, current)) {
-            int moveDistance = dfs(forest, move, visited, maxDistance + 1);
-            if (moveDistance > maxDistance) maxDistance = moveDistance;
+        Location start = new Location(matchR, matchC);
+        Queue<Distance> queue = new LinkedList<>();
+        queue.add(new Distance(start, 0));
+        Set<Distance> visited = new HashSet<>();
+        while (!queue.isEmpty()) {
+            Distance current = queue.poll();
+            if (visited.contains(current.loc())) continue;
+            visited.add(current);
+            for (Location neighbor : neighbors(forest, current.loc())) queue.add(new Distance(neighbor, current.time() + 1));
+        }
+        int maxDistance = 0;
+        for (Distance dist : visited) {
+            if (dist.time() > maxDistance) maxDistance = dist.time();
         }
         return maxDistance;
     }
 
-    private static List<int[]> possibleMoves(char[][] map, int[] location) {
-        int curR = location[0];
-        int curC = location[1];
-
-        List<int[]> validLocs = new ArrayList<>();
-
-        // UP
-        curR--;
-        if (curR >= 0 && curC < map[curR].length && map[curR][curC] != '.') {
-            validLocs.add(new int[]{curR, curC});
+    private static List<Location> neighbors(char[][] maze, Location current) {
+        List<Location> result = new ArrayList<>();
+        int[][] moves = new int[][] {
+            {-1, 0}, // UP
+            {1, 0}, // DOWN
+            {0, -1}, // LEFT
+            {0, 1}  // RIGHT
+        };
+        for (int[] move : moves) {
+            int newR = current.row() + move[0];
+            int newC = current.col() + move[1];
+            if (newR >= 0 && newR < maze.length && 
+                newC >= 0 && newC< maze[0].length && 
+                maze[newR][newC] != '.') {
+                    result.add(new Location(newR, newC));
+            }
         }
-
-        // DOWN
-        curR += 2;
-        if (curR < map.length && curC < map[curR].length && map[curR][curC] != '.') {
-            validLocs.add(new int[]{curR, curC});
-        }
-
-        // LEFT
-        curR--;
-        curC--;
-        if (curC >= 0 && map[curR][curC] != '.') {
-            validLocs.add(new int[]{curR, curC});
-        }
-
-        // RIGHT
-        curC += 2;
-        if (curC < map[curR].length && map[curR][curC] != '.') {
-            validLocs.add(new int[]{curR, curC});
-        }
-
-        return validLocs;
+        return result;
     }
 }
