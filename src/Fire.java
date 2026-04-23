@@ -47,6 +47,8 @@ public class Fire {
 
         int burnTime = timeToBurn(forest, new int[]{matchR, matchC}, new HashSet<>());
 
+        
+
         // Implement this AND add more tests!!!
         return burnTime;
     }
@@ -57,6 +59,10 @@ public class Fire {
         currentLocation[0] > 0 && currentLocation[1] > 0) return 0;
 
         visited.add(currentLocation);
+
+        if(forest[currentLocation[0]][currentLocation[1]] != 't') {
+            return 0;
+        }
 
         int[][] directions = {
             {0, 1},
@@ -70,9 +76,8 @@ public class Fire {
         for (int[] direction : directions) {
             int newR = currentLocation[0] + direction[0];
             int newC = currentLocation[1] + direction[1];
-            if(forest[newR][newC] == 't') {
-                burnCycles += timeToBurn(forest, new int[]{newR, newC}, visited, burnCycles);
-            }
+            burnCycles += timeToBurn(forest, new int[]{newR, newC}, visited, burnCycles);
+            
         }
 
         return burnCycles;
