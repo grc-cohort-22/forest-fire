@@ -50,24 +50,15 @@ public class Fire {
 
         // Implement this AND add more tests!!!
         boolean[][] visited = new boolean[forest.length][forest[0].length];
-        int time = 0;
-        for(int row = 0; row < forest.length; row++){
-            for(int col = 0; col < forest[0].length; col++){
-                if (forest[row][col] == forest[matchR][matchC]) {
-                    bfs(visited, row, col, forest, time);
-                }
-                
-            }
-        }
-        return -1;
+        Location startLocation = new Location(matchR, matchC, 0);
+
+        time += bfs(visited, startLocation, forest);
+        return 0;
     }
-    private static void bfs(boolean[][] visited, int row, int col, char[][] forest, int time){
-        Queue<int[]> q = new LinkedList<>();
-        // int row = forest.length;
-        // int col = forest[0].length;
-        // if ( curRow < 0 || curRow < 0 || curCol > col || row > forest.length || visited[row][col] || forest[newRow][newCol] == '.') return;
-        
-        q.add(new int[]{row, col});
+    private static int bfs(boolean[][] visited, Location location, char[][] forest){
+        Queue<Location> q = new LinkedList<>();
+        visited[location.row()][location.col()] = true;
+        q.add(location);
         
         while(!q.isEmpty()) {
             int[] current = q.poll();
@@ -85,6 +76,7 @@ public class Fire {
                     && !visited[newR][newC]
                 ){
                     q.add(new int[]{newR, newC});
+                    visited[newR][newC] = true;
                 }
                 
             }
