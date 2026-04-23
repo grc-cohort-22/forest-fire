@@ -40,5 +40,61 @@ public class FireTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testTimeToBurnExample_Massive() {
+        char[][] forest = {
+            {'.','.','.','t','t','t','t','t','t','t','t','t','t','t','t','t'},
+            {'.','.','t','t','t','t','t','t','.','.','.','.','.','t','t','.'},
+            {'.','.','t','t','t','t','t','.','.','t','t','t','t','t','t','.'},
+            {'.','t','t','t','t','t','.','t','t','t','t','t','t','t','t','t'},
+            {'t','t','t','t','t','t','.','t','t','t','t','t','.','t','t','t'},
+            {'t','t','t','t','t','t','.','t','t','t','t','.','.','t','t','t'},
+            {'.','.','t','t','t','t','.','t','t','t','t','.','.','.','t','t'},
+            {'.','t','t','t','t','t','.','t','t','t','t','t','t','t','t','t'},
+            {'t','t','t','t','t','t','.','t','t','t','t','t','t','t','t','t'},
+            {'.','.','.','t','t','t','t','t','t','t','t','t','t','t','t','t'},
+            {'.','.','t','t','t','t','t','t','.','.','.','.','.','.','.','.'},
+            {'.','.','t','t','t','t','t','.','.','t','t','t','t','t','t','.'},
+            {'.','t','t','t','t','t','.','t','t','t','t','t','t','t','t','t'}
+        };
+
+        int matchR = 4;
+        int matchC = 4;
+
+        int expected = 20;
+        int actual = Fire.timeToBurn(forest, matchR, matchC);
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testTimeToBurnExample_Null() {
+        char[][] forest = null;
+
+        int matchR = 0;
+        int matchC = 0;
+
+        int expected = 0;
+        int actual = Fire.timeToBurn(forest, matchR, matchC);
+
+        assertEquals(expected, actual);
+    }
+    @Test
+    public void testTimeToBurnExample_OutOfBounds() {
+        char[][] forest = {
+            {'t','.','.','t','t','t','t','.','t'},
+            {'.','.','t','t','.','.','.','.','t'},
+            {'.','.','t','t','t','t','t','t','t'},
+            {'t','t','t','t','.','.','.','.','.'}
+        };
+
+        int matchR = 10;
+        int matchC = 10;
+
+        int expected = 0;
+        int actual = Fire.timeToBurn(forest, matchR, matchC);
+
+        assertEquals(expected, actual);
+    }
     
 }

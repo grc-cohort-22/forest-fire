@@ -39,7 +39,7 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        if (forest == null) return 0;
+        if (forest == null||matchR>forest.length||matchR<0||matchC>forest[0].length||matchC<0) return 0;
         if (forest[matchR][matchC] == '.') return 0;
 
         char[][] burningforest = new char[forest.length][forest[0].length];
