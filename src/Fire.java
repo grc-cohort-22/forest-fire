@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public class Fire {
     /**
@@ -43,26 +46,37 @@ public class Fire {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
 
-        Queue<int[][]> queue = new LinkedList<>();
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{matchR, matchC});
 
-        int burnTime = timeToBurn(forest, new int[]{matchR, matchC}, new HashSet<>());
+        Set<int[]> visited = new HashSet<>();
+
+        int depth = 0;
+
+        while(!queue.isEmpty()) {
+            int[] location = queue.poll();
+
+            if(visited.contains(location)) continue;
+
+            if(forest.length > location[0] && forest[0].length > location[1] &&
+        location[0] > 0 && location[1] > 0) continue;
+
+            visited.add(location);
+
+
+            List<int[]> neighbors = neighbors(forest, location);
+            
+        }
 
         
 
         // Implement this AND add more tests!!!
-        return burnTime;
+        return depth;
     }
 
-    private static int timeToBurn(char[][] forest, int[] currentLocation, HashSet<int[]> visited, int burnCycles) {
-        if(visited.contains(currentLocation)) return 0;
-        if(forest.length > currentLocation[0] && forest[0].length > currentLocation[1] &&
-        currentLocation[0] > 0 && currentLocation[1] > 0) return 0;
+    private static List<int[]> neighbors(char[][] forest, int[] currentLocation) {
 
-        visited.add(currentLocation);
-
-        if(forest[currentLocation[0]][currentLocation[1]] != 't') {
-            return 0;
-        }
+        List<int[]> neighbors = new ArrayList<>();
 
         int[][] directions = {
             {0, 1},
@@ -71,15 +85,16 @@ public class Fire {
             {-1, 0}
         };
 
-        burnCycles++;
-
         for (int[] direction : directions) {
             int newR = currentLocation[0] + direction[0];
             int newC = currentLocation[1] + direction[1];
-            burnCycles += timeToBurn(forest, new int[]{newR, newC}, visited, burnCycles);
+            if(forest[newR][newC] != 't') {
+                continue;
+            }
+            neighbors += new int[]{newR, newC};
             
         }
 
-        return burnCycles;
+        return neighbors;
     }
 }
