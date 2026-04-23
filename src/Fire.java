@@ -53,6 +53,8 @@ public class Fire {
 
     private static int timeToBurn(char[][] forest, int[] currentLocation, HashSet<int[]> visited, int burnCycles) {
         if(visited.contains(currentLocation)) return 0;
+        if(forest.length > currentLocation[0] && forest[0].length > currentLocation[1] &&
+        currentLocation[0] > 0 && currentLocation[1] > 0) return 0;
 
         visited.add(currentLocation);
 
@@ -63,8 +65,16 @@ public class Fire {
             {-1, 0}
         };
 
+        burnCycles++;
+
         for (int[] direction : directions) {
-            timeToBurn(forest, new int[]{direction[0]}, burnCycles);
+            int newR = currentLocation[0] + direction[0];
+            int newC = currentLocation[1] + direction[1];
+            if(forest[newR][newC] == 't') {
+                burnCycles += timeToBurn(forest, new int[]{newR, newC}, visited, burnCycles);
+            }
         }
+
+        return burnCycles;
     }
 }
