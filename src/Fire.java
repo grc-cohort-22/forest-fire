@@ -41,45 +41,51 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         if (forest == null) return 0;
         if (forest[matchR][matchC] == '.') return 0;
+
         char[][] burningforest = new char[forest.length][forest[0].length];
-        for (int i  = 0; i < forest.length; i++) {
-            for (int j = 0; j< forest[0].length; j++) {
+        for (int i = 0; i < forest.length; i++) {
+            for (int j = 0; j < forest[0].length; j++) {
                 burningforest[i][j] = forest[i][j];
             }
         }
-        Queue <int[]> queue = new LinkedList<>();
+
+        Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{matchR, matchC, 0});
         burningforest[matchR][matchC] = 'f';
+
         int output = 0;
-        while(!queue.isEmpty()) {
+
+        while (!queue.isEmpty()) {
             int[] current = queue.poll();
-            boolean spread = false;
+            int r = current[0];
+            int c = current[1];
+            int time = current[2];
 
-            if (matchR<burningforest.length-1 && burningforest[matchR+1][matchC] == 't') {
-                burningforest[matchR+1][matchC] = 'f';
-                queue.add(new int[]{matchR+1, matchC, current[2]+1});
-                spread = true;
-            }
-            
-            if (matchR>0 && burningforest[matchR-1][matchC] == 't') {
-                burningforest[matchR-1][matchC] = 'f';
-                queue.add(new int[]{matchR-1, matchC, current[2]+1});
-                spread = true;
+            if (r < burningforest.length - 1 && burningforest[r + 1][c] == 't') {
+                burningforest[r + 1][c] = 'f';
+                queue.add(new int[]{r + 1, c, time + 1});
+                if (time + 1 > output) output = time + 1;
             }
 
-            if (matchC<burningforest[0].length-1 && burningforest[matchR][matchC+1] == 't') {
-                burningforest[matchR][matchC+1] = 'f';
-                queue.add(new int[]{matchR, matchC+1, current[2]+1});
-                spread = true;
+            if (r > 0 && burningforest[r - 1][c] == 't') {
+                burningforest[r - 1][c] = 'f';
+                queue.add(new int[]{r - 1, c, time + 1});
+                if (time + 1 > output) output = time + 1;
             }
 
-            if (matchC>0 && burningforest[matchR][matchC-1] == 't') {
-                burningforest[matchR][matchC-1] = 'f';
-                queue.add(new int[]{matchR, matchC-1, current[2]+1});
-                spread = true;
+            if (c < burningforest[0].length - 1 && burningforest[r][c + 1] == 't') {
+                burningforest[r][c + 1] = 'f';
+                queue.add(new int[]{r, c + 1, time + 1});
+                if (time + 1 > output) output = time + 1;
             }
-            if (spread) output = current[2];
+
+            if (c > 0 && burningforest[r][c - 1] == 't') {
+                burningforest[r][c - 1] = 'f';
+                queue.add(new int[]{r, c - 1, time + 1});
+                if (time + 1 > output) output = time + 1;
+            }
         }
+
         return output;
     }
 }
