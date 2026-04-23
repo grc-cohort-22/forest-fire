@@ -1,3 +1,7 @@
+
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -42,8 +46,33 @@ public class Fire {
         // Implement this AND add more tests!!!
         // return -1;
 
+        // Exceptions to make: 
+        // multiple fires
+        // no starting location
+        // no trees available
 
 
-        public static Location(char[][] forest) throws 
+        // Location start = forestLocation(forest);
+        // Queue<Location> queue = new LinkedList<>()
+
+
+         public static Location forestLocation( char[][] forest) throws NoStartingLocationException, NoTreesAvailableException {
+            Location location = null;
+
+            for (int row = 0; row < forest.length; row++) {
+                for (int col = 0; col < forest[row].length; col++) {
+                    if (forest[row][col] == 't') {
+                        if (location == null) {
+                            location = new location (row, col);
+                        } else {
+                            throw new NoTreesAvailableException();
+                        }
+                    }
+                }
+            }
+            if (location == null) {
+                throw new NoFiresException();
+            }
+         }
     }
 }
