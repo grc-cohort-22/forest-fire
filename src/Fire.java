@@ -1,3 +1,7 @@
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -16,7 +20,7 @@ public class Fire {
      * 
      * t..tttt.t
      * ..tt....t
-     * ..ttttttt
+     * ..ttttFtt
      * tttt.....
      * 
      * matchR: 2
@@ -39,7 +43,17 @@ public class Fire {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
 
+        Queue<int[][]> queue = new LinkedList<>();
+
+        int burnTime = timeToBurn(forest, new int[]{matchR, matchC}, new HashSet<>());
+
         // Implement this AND add more tests!!!
-        return -1;
+        return burnTime;
+    }
+
+    private static int timeToBurn(char[][] forest, int[] currentLocation, HashSet<int[]> visited) {
+        if(visited.contains(currentLocation)) return 0;
+
+
     }
 }
