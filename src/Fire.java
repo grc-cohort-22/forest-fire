@@ -50,16 +50,20 @@ public class Fire {
         Location start = new Location(matchR, matchC);
         Queue<Distance> queue = new LinkedList<>();
         queue.add(new Distance(start, 0));
-        Set<Distance> visited = new HashSet<>();
+        Set<Location> visited = new HashSet<>();
+        Set<Integer> timeSet = new HashSet<>();
         while (!queue.isEmpty()) {
-            Distance current = queue.poll();
-            if (visited.contains(current.loc())) continue;
+            Distance poll = queue.poll();
+            Location current = poll.loc();
+            int time = poll.time();
+            if (visited.contains(current)) continue;
             visited.add(current);
-            for (Location neighbor : neighbors(forest, current.loc())) queue.add(new Distance(neighbor, current.time() + 1));
+            timeSet.add(time);
+            for (Location neighbor : neighbors(forest, current)) queue.add(new Distance(neighbor, time + 1));
         }
         int maxDistance = 0;
-        for (Distance dist : visited) {
-            if (dist.time() > maxDistance) maxDistance = dist.time();
+        for (int dist : timeSet) {
+            if (dist > maxDistance) maxDistance = dist;
         }
         return maxDistance;
     }
