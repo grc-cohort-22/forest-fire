@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -40,6 +43,41 @@ public class Fire {
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
+        boolean[][] visited = new boolean[forest.length][forest[0].length];
         return -1;
+    }
+
+    public static List<int[]> possibleMoves(int[][] map, int[] location) {
+        int curR = location[0];
+        int curC = location[1];
+
+        List<int[]> validLocs = new ArrayList<>();
+
+        // UP
+        curR--;
+        if (curR >= 0 && curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+            validLocs.add(new int[]{curR, curC});
+        }
+
+        // DOWN
+        curR += 2;
+        if (curR < map.length && curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+            validLocs.add(new int[]{curR, curC});
+        }
+
+        // LEFT
+        curR--;
+        curC--;
+        if (curC >= 0 && map[curR][curC] != 2 && map[curR][curC] != 3) {
+            validLocs.add(new int[]{curR, curC});
+        }
+
+        // RIGHT
+        curC += 2;
+        if (curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+            validLocs.add(new int[]{curR, curC});
+        }
+
+        return validLocs;
     }
 }
