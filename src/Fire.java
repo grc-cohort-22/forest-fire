@@ -44,10 +44,22 @@ public class Fire {
 
         // Implement this AND add more tests!!!
         boolean[][] visited = new boolean[forest.length][forest[0].length];
-        return -1;
+        return dfs(forest, new int[]{matchR, matchC}, visited, 0);
     }
 
-    public static List<int[]> possibleMoves(int[][] map, int[] location) {
+    private static int dfs(char[][] forest, int[] current, boolean[][] visited, int maxDistance) {
+        int curR = current[0];
+        int curC = current[1];
+        if (visited[curR][curC]) return maxDistance;
+        visited[curR][curC] = true;
+        for (int[] move : possibleMoves(forest, current)) {
+            int moveDistance = dfs(forest, move, visited, maxDistance + 1);
+            if (moveDistance > maxDistance) maxDistance = moveDistance;
+        }
+        return maxDistance;
+    }
+
+    private static List<int[]> possibleMoves(char[][] map, int[] location) {
         int curR = location[0];
         int curC = location[1];
 
@@ -55,26 +67,26 @@ public class Fire {
 
         // UP
         curR--;
-        if (curR >= 0 && curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+        if (curR >= 0 && curC < map[curR].length && map[curR][curC] != '.') {
             validLocs.add(new int[]{curR, curC});
         }
 
         // DOWN
         curR += 2;
-        if (curR < map.length && curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+        if (curR < map.length && curC < map[curR].length && map[curR][curC] != '.') {
             validLocs.add(new int[]{curR, curC});
         }
 
         // LEFT
         curR--;
         curC--;
-        if (curC >= 0 && map[curR][curC] != 2 && map[curR][curC] != 3) {
+        if (curC >= 0 && map[curR][curC] != '.') {
             validLocs.add(new int[]{curR, curC});
         }
 
         // RIGHT
         curC += 2;
-        if (curC < map[curR].length && map[curR][curC] != 2 && map[curR][curC] != 3) {
+        if (curC < map[curR].length && map[curR][curC] != '.') {
             validLocs.add(new int[]{curR, curC});
         }
 
