@@ -1,5 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 public class Fire {
     /**
@@ -41,26 +45,46 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
-        boolean validSpot = forest[matchR][matchC] == 't';
-        List<Location> neighbors = neighbors(forest, new Location(matchR, matchC));
-        for(Location x : neighbors) {
-            System.out.println(x);
+        // List<Location> neighbors = neighbors(forest, new Location(matchR, matchC));
+        // for(Location x : neighbors) {
+        //     System.out.println(x);
+        // }
+        if (forest[matchR][matchC] != 't') {
+            return -1;
         }
-        if (!validSpot) return -1;
-        // Implement this AND add more tests!!!
-        return 0;
+
+        Set<Location> visited = new HashSet<>();
+        Queue<BurningTree> queue = new LinkedList<>();
+
+        Location startLoc = new Location(matchR, matchC);
+        queue.add(new BurningTree(startLoc, 0));
+        visited.add(startLoc);
+
+        int maxTime = 0;
+
+        while (!queue.isEmpty()) {
+            BurningTree current = queue.poll();
+            maxTime = Math.max(maxTime, current.time());
+
+            for (Location neighbor : neighbors(forest, current.location())) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(new BurningTree(neighbor, current.time() + 1));
+                }
+            }
+        }
+
+        return maxTime;
     }
 
     public static void main(String[] args) {
         char[][] forest = {
-            {'t', 't', 't', '.'},
-            {'.', 't', '.', 't'},
-            {'t', 't', 't', 't'},
-            {'.', '.', 't', '.'}
+            {'t', 't', 't'},
+            {'t', 't', 't'},
+            {'t', 't', 't'}
         };
-
-        int matchR = 2;
-        int matchC = 1;
+        int matchR = 0;
+        int matchC = 0;
 
         System.out.println(forest[matchR][matchC]);
 
@@ -71,24 +95,26 @@ public class Fire {
     public static List<Location> neighbors(char[][] forest, Location currentLoc) {
         List<Location> result = new ArrayList<>();
 
-        int[][] moves = new int[][] {
-            {-1, 0},    // up
-            {1, 0},    // down
-            {0, -1},  // left
-            {0, 1}   // right
+        int[][] moves = {
+            {-1, 0},
+            {1, 0},
+            {0, -1},
+            {0, 1}
         };
 
         for (int[] move : moves) {
             int newR = currentLoc.row() + move[0];
             int newC = currentLoc.col() + move[1];
-            char loc = forest[newR][newC];
+
             if (
-                (newR >= 0 && newR < forest.length) && 
-                (newC >= 0 && newC < forest[0].length) && 
-                (loc != '.')) {
-                    result.add(new Location(newR, newC));
+                newR >= 0 && newR < forest.length &&
+                newC >= 0 && newC < forest[0].length &&
+                forest[newR][newC] != '.'
+            ) {
+                result.add(new Location(newR, newC));
             }
         }
+
         return result;
     }
 }
