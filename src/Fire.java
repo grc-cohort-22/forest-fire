@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -40,6 +46,37 @@ public class Fire {
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
+        HashSet<Character> seen = new HashSet<>();
+        Queue<Location> queue = new LinkedList<>();
+
         return -1;
     }
+
+    public static List<Location> possibleMoves(char[][] forest, int matchR, int matchC) {
+        List<Location> list = new ArrayList<>();
+
+        int[][] moves = new int[][] {
+            {0, -1}, // LEFT
+            {0, 1} , // RIGHT
+            {1, 0}, // DOWN
+            {-1, 0} // UP
+        };
+
+        for (int[] move : moves) {
+            int newC = matchC + move[1];
+            int newR = matchR+ move[0];
+            if (newC < 0 && newC < forest[newC].length 
+                && newR < 0 && newR < forest[newR].length 
+                && forest[newC][newR] == 't') {
+                list.add(new Location(newC, newR));
+            } 
+        }
+
+        return list;
+    }
+
+
+    
+
+
 }
