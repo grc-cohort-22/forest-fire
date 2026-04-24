@@ -45,7 +45,7 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
-
+        forestCheck(forest);
         // Implement this AND add more tests!!!
         Location start = new Location(matchR, matchC);
         Queue<Distance> queue = new LinkedList<>();
@@ -83,8 +83,18 @@ public class Fire {
                 newC >= 0 && newC< maze[0].length && 
                 maze[newR][newC] != '.') {
                     result.add(new Location(newR, newC));
-            }
+            } 
         }
         return result;
     }
+
+    private static void forestCheck(char[][] maze) throws InvalidForestException{
+        for(int row = 0; row < maze.length; row++){
+            for(int col = 0; col < maze[row].length; col++){
+                if(maze[row][col] != 't' && maze[row][col] != '.'){
+                    throw new InvalidForestException();
+                }
+            }
+        }
+    } 
 }
