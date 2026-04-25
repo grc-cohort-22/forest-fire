@@ -50,52 +50,52 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
+         // HINT: when adding to your BFS queue, you can include more information than
 
+        // just a location. What other information might be useful? 
+        int rows = forest.length;
+        int cols = forest[0].length;
+        
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[] { matchR, matchC });
+        boolean[][] visited = new boolean[rows][cols];
 
-        Set<int[]> visited = new HashSet<>();
+        queue.add(new int[]{matchR, matchC, 0});
+        visited[matchR][matchC] = true;
 
         int depth = 0;
 
-        while (!queue.isEmpty()) {
+        int[][] directions = {
+            { 0, 1 }, 
+            { 0, -1 }, 
+            { 1, 0 }, 
+            { -1, 0 }
+        };
+
+        while(!queue.isEmpty()) {
             int[] location = queue.poll();
+            
+            int row = location[0];
+            int col = location[1];
+            int time = location[2];
 
-            if (visited.contains(location))
-                continue;
-
-            if (forest.length > location[0] && forest[0].length > location[1] &&
-                    location[0] > 0 && location[1] > 0)
-                continue;
-
-            visited.add(location);
-
-            List<int[]> neighbors = new ArrayList<>();
-
-            int[][] directions = {
-                    { 0, 1 },
-                    { 0, -1 },
-                    { 1, 0 },
-                    { -1, 0 }
-            };
+            depth = Math.max(depth, time);
 
             for (int[] direction : directions) {
-                int newR = location[0] + direction[0];
-                int newC = location[1] + direction[1];
-                if (forest[newR][newC] != 't') {
-                    continue;
-                }
-                neighbors.add(new int[] { newR, newC });
-            }
+                int newR = row + direction[0];
+                int newC = col + direction[1];
 
-            for (int[] neighbor : neighbors) {
-                queue.add(neighbor);
+                if (newR >= 0 && newR < rows &&
+                    newC >= 0 && newC < cols && 
+                    forest[newR][newC] == 't' && 
+                    !visited[newR][newC]) {
+
+                    visited[newR][newC] = true;
+                    queue.add(new int[] { newR, newC, time + 1 });
+                }
             }
         }
 
-        // Implement this AND add more tests!!!
+        // Implement this AND add more tests!!! 
         return depth;
     }
 }
