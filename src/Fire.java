@@ -45,12 +45,11 @@ public class Fire {
         // just a location. What other information might be useful?
 
         if(forest[matchR][matchC] != 't') throw new IllegalArgumentException();
-        boolean[][] validVisited =  new boolean[forest.length][forest[0].length];
-        isValid(matchR, matchC, forest, validVisited);
+
+        boolean[][] visited =  new boolean[forest.length][forest[0].length];
 
         // Implement this AND add more tests!!!
-        Queue<char[]> queue = new LinkedList<>();
-        Set<int[]> visited = new HashSet<>();
+        // Queue<char[]> queue = new LinkedList<>();
 
         int[][] directions = {
             {1,0}, //down
@@ -80,29 +79,37 @@ public class Fire {
         return true;
     }
 
-    public static int bfs(char[][] forest, int[] start, Queue<int[]> queue, Set<int[]> visited , int[][] directions){
-        if(start == null) return 0;
-        int time = 0;
-        boolean[][] validVisited =  new boolean[forest.length][forest[0].length];
+    public static int bfs(char[][] forest, int[] start, int[][] directions, boolean[][] visited) {
+        Queue<int[]> queue = new LinkedList<>();
+
         queue.add(start);
-        visited.add(start);
+        visited[start[0]][start[1]] = true;
+
+        int maxTime = 0;
 
         while(!queue.isEmpty()){
             int[] current = queue.poll();
+
             int currentRow = current[0];
             int currentCol = current[1];
+            int time = current[2];
+
+            maxTime = Math.max(maxTime, time);
 
             for(int[] direction : directions){
                 int newRow = currentRow + direction[0];
                 int newCol = currentCol + direction[1];
-                if(isValid(newRow, newCol, forest, validVisited));
-
+                
+                if(isValid(newRow, newCol, forest, visited)) {
+                    visited[newRow][newCol] = true;
+                    queue.add(new int[]{newRow, newCol, time + 1});
+                }
 
             }
         }
 
 
-        return -1;
+        return maxTime;
     }
 
 }
