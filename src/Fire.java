@@ -61,7 +61,7 @@ public class Fire {
                 continue;
             }
             forest[location[0]][location[1]] = '.';
-            for(int[] move: possibleMoves(forest, location[0], location[1])){
+            for(int[] move: possibleMoves(forest, locagtion[0], location[1])){
                 treeQueue.add(new int[]{move[0], move[1], ++depth});
             }
 
