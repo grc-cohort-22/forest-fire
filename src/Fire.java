@@ -46,9 +46,9 @@ public class Fire {
         // just a location. What other information might be useful?
 
         char[][] forestClone = forest.clone();
-
         return timeToBurn(forestClone, matchR, matchC, 0);
     }
+    
     public static int timeToBurn(char[][]forest, int startRow, int startColumn, int depth){
         if(forest[startRow][startColumn] == '.') return 0;
 
@@ -57,12 +57,11 @@ public class Fire {
         
         while(!treeQueue.isEmpty()){
             int[] location = treeQueue.poll();
-            if(forest[location[0]][location[1]] == '.'){
-                continue;
-            }
-            forest[location[0]][location[1]] = '.';
-            for(int[] move: possibleMoves(forest, locagtion[0], location[1])){
-                treeQueue.add(new int[]{move[0], move[1], ++depth});
+            if(forest[location[0]][location[1]] == '.') continue;
+            forest[location[0]][location[1]] = '.'; 
+            depth = Math.max(depth, location[2]); // check depth burned compared to current total burned
+            for(int[] move: possibleMoves(forest, location[0], location[1])){
+                treeQueue.add(new int[]{move[0], move[1], depth + 1});
             }
 
         }
@@ -85,7 +84,7 @@ public class Fire {
             if(newRow >= 0 && newRow < forest.length &&
                newColumn >= 0 && newColumn < forest[0].length &&
                forest[newRow][newColumn] != '.'){
-                    possibleMoves.add(move);
+                    possibleMoves.add(new int[]{newRow, newColumn});
                }
         }
         return possibleMoves;
