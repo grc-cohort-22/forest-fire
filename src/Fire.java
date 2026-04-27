@@ -52,34 +52,48 @@ public class Fire {
         boolean[][] visited = new boolean[forest.length][forest[0].length];
         Location startLocation = new Location(matchR, matchC, 0);
 
-        time += bfs(visited, startLocation, forest);
-        return 0;
+        return bfs(visited, startLocation, forest);
     }
     private static int bfs(boolean[][] visited, Location location, char[][] forest){
         Queue<Location> q = new LinkedList<>();
         visited[location.row()][location.col()] = true;
         q.add(location);
-        
+        int time = 0;
         while(!q.isEmpty()) {
-            int[] current = q.poll();
-            int curR = current[0];
-            int curC = current[1];
+            // r 2 c 6
+            //looing
+            // iterations
+                // r 3 c 6 // down "."
+                // r 1 c 6 // up  "."
+                // r 2 c 7 // right "t"
+                // r 2 c 5 // left "t"
+            /*
+            {1, 0},
+            {-1, 0},
+            {0, 1}, 
+            {0, -1}
+             */
+            Location current = q.poll();
+            int curR = current.row();
+            int curC = current.col();
             for(int[] move : moves) {
                 int newR = curR + move[0];
                 int newC = curC + move[1];
 
-                if(newR >= 0
+                if(    newR >= 0
                     && newR < forest.length
                     && newC >= 0
                     && newC < forest[0].length
                     && forest[newR][newC] != '.'
                     && !visited[newR][newC]
                 ){
-                    q.add(new int[]{newR, newC});
+                    q.add(new Location(newR, newC, 0));
                     visited[newR][newC] = true;
                 }
                 
             }
         }
+        return time;
     }
+    
 }
