@@ -1,4 +1,11 @@
-public class Fire {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+
+public class Fire {    
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
      * match is lit at a given location.
@@ -35,11 +42,55 @@ public class Fire {
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
      */
-    public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
 
-        // Implement this AND add more tests!!!
-        return -1;
+    public static int timeToBurn(char[][] forest, int matchR, int matchC) {
+        Set<Integer> depthSet = new HashSet<>();
+        Location inputLocation = new Location(matchR, matchC, 0);
+
+        Queue<Location> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        queue.add(inputLocation);
+
+        while (!queue.isEmpty()){
+            Location current = queue.poll();
+            String currentString = "" + current.row() + " " + current.col();
+            if (visited.contains(currentString)) continue;
+            
+            visited.add(currentString);
+            depthSet.add(current.depth());
+
+            for (Location neighbor : neighbors(forest, current)){
+                queue.add(neighbor);
+            }
+        }
+        return depthSet.size() - 1;
+    }
+
+    public static List<Location> neighbors(char[][] forest, Location current){
+        int currentDepth = current.depth() + 1;
+        List<Location> result = new ArrayList<>();
+        int[][] moves = new int[][]{
+            {-1, 0}, //UP
+            {1, 0}, //DOWN
+            {0, -1}, //LEFT
+            {0, 1} //RIGHT
+        };
+
+        for (int[] move : moves){
+            int newR = current.row() + move[0];
+            int newC = current.col() + move[1];
+
+            if (
+                newR >= 0 && newR < forest.length && 
+                newC >= 0 && newC < forest[0].length &&
+                forest[newR][newC] == 't'
+            ){
+
+                result.add(new Location(newR, newC, currentDepth));
+            }
+        }
+
+        return result;
     }
 }
