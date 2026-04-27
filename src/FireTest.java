@@ -40,4 +40,9 @@ public class FireTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testBadInput(){
+        
+    }
 }

@@ -41,11 +41,15 @@ public class Fire {
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
      */
-    public static int timeToBurn(char[][] forest, int matchR, int matchC) {
+    public static int timeToBurn(char[][] forest, int matchR, int matchC) throws IllegalArgumentException{
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
         if(forest == null){
-            return 0;
+            return -1;
+        }
+
+        if(forest[matchR][matchC] != 't'){
+            throw new IllegalArgumentException("Starting match needs to be on a tree.");
         }
 
         int time = -1;
