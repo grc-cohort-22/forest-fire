@@ -1,3 +1,10 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -38,8 +45,76 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
+        // List<Location> neighbors = neighbors(forest, new Location(matchR, matchC));
+        // for(Location x : neighbors) {
+        //     System.out.println(x);
+        // }
+        if (forest[matchR][matchC] != 't') {
+            return -1;
+        }
 
-        // Implement this AND add more tests!!!
-        return -1;
+        Set<Location> visited = new HashSet<>();
+        Queue<BurningTree> queue = new LinkedList<>();
+
+        Location startLoc = new Location(matchR, matchC);
+        queue.add(new BurningTree(startLoc, 0));
+        visited.add(startLoc);
+
+        int maxTime = 0;
+
+        while (!queue.isEmpty()) {
+            BurningTree current = queue.poll();
+            maxTime = Math.max(maxTime, current.time());
+
+            for (Location neighbor : neighbors(forest, current.location())) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(new BurningTree(neighbor, current.time() + 1));
+                }
+            }
+        }
+
+        return maxTime;
+    }
+
+    public static void main(String[] args) {
+        char[][] forest = {
+            {'t', 't', 't'},
+            {'t', 't', 't'},
+            {'t', 't', 't'}
+        };
+        int matchR = 0;
+        int matchC = 0;
+
+        System.out.println(forest[matchR][matchC]);
+
+        int result = timeToBurn(forest, matchR, matchC);
+        System.out.println("Time to burn: " + result);
+    }
+
+    public static List<Location> neighbors(char[][] forest, Location currentLoc) {
+        List<Location> result = new ArrayList<>();
+
+        int[][] moves = {
+            {-1, 0},
+            {1, 0},
+            {0, -1},
+            {0, 1}
+        };
+
+        for (int[] move : moves) {
+            int newR = currentLoc.row() + move[0];
+            int newC = currentLoc.col() + move[1];
+
+            if (
+                newR >= 0 && newR < forest.length &&
+                newC >= 0 && newC < forest[0].length &&
+                forest[newR][newC] != '.'
+            ) {
+                result.add(new Location(newR, newC));
+            }
+        }
+
+        return result;
     }
 }
