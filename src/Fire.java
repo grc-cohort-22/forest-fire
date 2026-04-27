@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -36,10 +39,53 @@ public class Fire {
      * @return the time at which the final tree to be incinerated starts burning
      */
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
-        // HINT: when adding to your BFS queue, you can include more information than
-        // just a location. What other information might be useful?
+        if (forest == null||matchR>forest.length||matchR<0||matchC>forest[0].length||matchC<0) return 0;
+        if (forest[matchR][matchC] == '.') return 0;
 
-        // Implement this AND add more tests!!!
-        return -1;
+        char[][] burningforest = new char[forest.length][forest[0].length];
+        for (int i = 0; i < forest.length; i++) {
+            for (int j = 0; j < forest[0].length; j++) {
+                burningforest[i][j] = forest[i][j];
+            }
+        }
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{matchR, matchC, 0});
+        burningforest[matchR][matchC] = 'f';
+
+        int output = 0;
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int r = current[0];
+            int c = current[1];
+            int time = current[2];
+
+            if (r < burningforest.length - 1 && burningforest[r + 1][c] == 't') {
+                burningforest[r + 1][c] = 'f';
+                queue.add(new int[]{r + 1, c, time + 1});
+                if (time + 1 > output) output = time + 1;
+            }
+
+            if (r > 0 && burningforest[r - 1][c] == 't') {
+                burningforest[r - 1][c] = 'f';
+                queue.add(new int[]{r - 1, c, time + 1});
+                if (time + 1 > output) output = time + 1;
+            }
+
+            if (c < burningforest[0].length - 1 && burningforest[r][c + 1] == 't') {
+                burningforest[r][c + 1] = 'f';
+                queue.add(new int[]{r, c + 1, time + 1});
+                if (time + 1 > output) output = time + 1;
+            }
+
+            if (c > 0 && burningforest[r][c - 1] == 't') {
+                burningforest[r][c - 1] = 'f';
+                queue.add(new int[]{r, c - 1, time + 1});
+                if (time + 1 > output) output = time + 1;
+            }
+        }
+
+        return output;
     }
 }
