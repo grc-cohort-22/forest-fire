@@ -68,6 +68,16 @@ public class FireTest {
     }
 
     @Test
+    public void testMatchInCenterSpreadsAllDirections() {
+        char[][] forest = {
+            {'t', 't', 't'},
+            {'t', 't', 't'},
+            {'t', 't', 't'}
+        };
+        assertEquals(2, Fire.timeToBurn(forest, 1, 1));
+    }
+
+    @Test
     public void testGridOfTreesBurns() {
         char[][] forest = {
             {'t', 't', 't', 't'},
@@ -101,5 +111,15 @@ public class FireTest {
         int actual = Fire.timeToBurn(forest, matchR, matchC);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTwoGroupsOfIsolatedTrees() {
+        char[][] forest = {
+            {'t', 't', '.', 't', 't'},
+            {'t', 't', '.', 't', 't'},
+            {'t', 't', '.', 't', 't'}
+        };
+        assertEquals(3, Fire.timeToBurn(forest, 0, 0));
     }
 }
