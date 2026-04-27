@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -35,11 +41,77 @@ public class Fire {
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
      */
-    public static int timeToBurn(char[][] forest, int matchR, int matchC) {
+    public static int timeToBurn(char[][] forest, int matchR, int matchC) throws IllegalArgumentException{
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
+        if(forest == null){
+            return -1;
+        }
+
+        if(forest[matchR][matchC] != 't'){
+            throw new IllegalArgumentException("Starting match needs to be on a tree.");
+        }
+
+        int time = -1;
 
         // Implement this AND add more tests!!!
-        return -1;
+        HashSet<Location> seen = new HashSet<>();
+        Queue<Location> queue = new LinkedList<>();
+
+        queue.add(new Location(matchR, matchC));
+        
+        while(!queue.isEmpty()){
+                int size = queue.size();
+                time++;
+                
+                for (int i = 0; i < size; i++) { 
+                Location current = queue.poll();
+                if(seen.contains(current)){
+                    continue;
+                }
+
+                seen.add(current);
+
+
+                int currentR = current.row();
+                int currentC = current.col();
+
+                for(Location move : possibleMoves(forest, currentR, currentC)){
+                    if (!seen.contains(move)) {
+                        queue.add(new Location(move.row(), move.col()));
+                    }
+                }
+            }
+        }
+
+        return time;
     }
+
+    public static List<Location> possibleMoves(char[][] forest, int matchR, int matchC) {
+        List<Location> list = new ArrayList<>();
+
+        int[][] moves = new int[][]{
+            {0, -1}, // LEFT
+            {0, 1} , // RIGHT
+            {1, 0}, // DOWN
+            {-1, 0} // UP
+        };
+
+        for (int[] move : moves) {
+            int newR = matchR + move[0];
+            int newC = matchC + move[1];
+            if (newC >= 0 && newC < forest[0].length 
+                && newR >= 0 && newR < forest.length 
+                && forest[newR][newC] == 't') {
+                list.add(new Location(newR, newC));
+            } 
+        }
+
+        return list;
+    }
+
+
+    
+
+
 }
