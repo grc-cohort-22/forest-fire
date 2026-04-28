@@ -1,3 +1,10 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -38,8 +45,56 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
-
+        forestCheck(forest);
         // Implement this AND add more tests!!!
-        return -1;
+        Location start = new Location(matchR, matchC);
+        Queue<Distance> queue = new LinkedList<>();
+        queue.add(new Distance(start, 0));
+        Set<Location> visited = new HashSet<>();
+        Set<Integer> timeSet = new HashSet<>();
+        while (!queue.isEmpty()) {
+            Distance poll = queue.poll();
+            Location current = poll.loc();
+            int time = poll.time();
+            if (visited.contains(current)) continue;
+            visited.add(current);
+            timeSet.add(time);
+            for (Location neighbor : neighbors(forest, current)) queue.add(new Distance(neighbor, time + 1));
+        }
+        int maxDistance = 0;
+        for (int dist : timeSet) {
+            if (dist > maxDistance) maxDistance = dist;
+        }
+        return maxDistance;
     }
+
+    private static List<Location> neighbors(char[][] maze, Location current) {
+        List<Location> result = new ArrayList<>();
+        int[][] moves = new int[][] {
+            {-1, 0}, // UP
+            {1, 0}, // DOWN
+            {0, -1}, // LEFT
+            {0, 1}  // RIGHT
+        };
+        for (int[] move : moves) {
+            int newR = current.row() + move[0];
+            int newC = current.col() + move[1];
+            if (newR >= 0 && newR < maze.length && 
+                newC >= 0 && newC< maze[0].length && 
+                maze[newR][newC] != '.') {
+                    result.add(new Location(newR, newC));
+            } 
+        }
+        return result;
+    }
+
+    private static void forestCheck(char[][] maze) throws InvalidForestException{
+        for(int row = 0; row < maze.length; row++){
+            for(int col = 0; col < maze[row].length; col++){
+                if(maze[row][col] != 't' && maze[row][col] != '.'){
+                    throw new InvalidForestException();
+                }
+            }
+        }
+    } 
 }
