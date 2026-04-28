@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
@@ -35,11 +38,75 @@ public class Fire {
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
      */
+    public static final int[][] moves = new int[][] {
+        {1, 0},
+        {-1, 0},
+        {0, 1}, 
+        {0, -1}
+    };
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
 
         // Implement this AND add more tests!!!
-        return -1;
+        boolean[][] visited = new boolean[forest.length][forest[0].length];
+        Location startLocation = new Location(matchR, matchC, 0);
+
+        return bfs(visited, startLocation, forest);
     }
+    private static int bfs(boolean[][] visited, Location location, char[][] forest){
+        if(forest[location.row()][location.col()] == '.') return 0;
+        Queue<Location> q = new LinkedList<>();
+        visited[location.row()][location.col()] = true;
+        q.add(location);
+        int time = 0;
+
+        while(!q.isEmpty()) {
+            Location current = q.poll(); 
+            time = current.time();
+            int curR = current.row(); // 2  // 2  // 2
+            int curC = current.col(); // 6  // 7  // 5
+            
+            for(int[] move : moves) {
+                int newR = curR + move[0];
+                int newC = curC + move[1];
+
+                if(    newR >= 0
+                    && newR < forest.length
+                    && newC >= 0
+                    && newC < forest[0].length
+                    && forest[newR][newC] != '.'
+                    && !visited[newR][newC]
+                ){
+                    q.add(new Location(newR, newC, time + 1));
+                    visited[newR][newC] = true;   
+                }
+                
+            }
+        }
+        return time;
+     
+    }
+    // queue =  r 0 c 8 n 4 | r 1 c 3 n 4 | r 3  c 3 n 4 | r 2 c 2 n 4
+    // current time = 2
+    // char[][] forest = {
+    //       {'t', '.', '.', 't5','t6','t7','t8','.','t4'},
+    //       {'.', '.', 't5','t4','.', '.', '.', '.','t3'},
+    //       {'.' ,'.' ,'t4','t3','t2','t1','t','t1','t2'},
+    //       {'t7','t6','t5','t4', '.', '.', '.', '.', '.'}
+    //     };
+
+     // r 2 c 6
+            //looing
+            // iterations
+                // r 3 c 6 // down "."
+                // r 1 c 6 // up  "."
+                // r 2 c 7 // right "t"
+                // r 2 c 5 // left "t"
+            /*
+            {1, 0},
+            {-1, 0},
+            {0, 1}, 
+            {0, -1}
+             */
 }
