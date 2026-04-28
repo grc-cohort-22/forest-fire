@@ -55,6 +55,7 @@ public class Fire {
         return bfs(visited, startLocation, forest);
     }
     private static int bfs(boolean[][] visited, Location location, char[][] forest){
+        if(forest[location.row()][location.col()] == '.') return 0;
         Queue<Location> q = new LinkedList<>();
         visited[location.row()][location.col()] = true;
         q.add(location);
