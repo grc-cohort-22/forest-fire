@@ -1,17 +1,27 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+
 public class Fire {
     /**
      * Returns how long it takes for all vulnerable trees to be set on fire if a
      * match is lit at a given location.
      * 
-     * The forest is represented via a rectangular 2d char array where t represents a tree
+     * The forest is represented via a rectangular 2d char array where t represents
+     * a tree
      * and . represents an empty space.
      * 
-     * At time 0, the tree at location [matchR, matchC] is set on fire. At every subsequent
-     * time step, any tree that is adjacent (up/down/left/right) to a burning tree is also
-     * set on fire. 
+     * At time 0, the tree at location [matchR, matchC] is set on fire. At every
+     * subsequent
+     * time step, any tree that is adjacent (up/down/left/right) to a burning tree
+     * is also
+     * set on fire.
      * 
      * 
-     * EXAMPLE 
+     * EXAMPLE
      * forest:
      * 
      * t..tttt.t
@@ -25,12 +35,16 @@ public class Fire {
      * Result: 8
      * 
      * Explanation:
-     * At time 0, the tree at (2, 6) is set on fire. At time 1, its adjacent trees also catch on fire
-     * At time 2, the trees adjacent to those catch as well. At time 8, the last tree to catch is at
-     * (0,6). In this example, there is one tree that never burns, so it is not included in the time calculation.
+     * At time 0, the tree at (2, 6) is set on fire. At time 1, its adjacent trees
+     * also catch on fire
+     * At time 2, the trees adjacent to those catch as well. At time 8, the last
+     * tree to catch is at
+     * (0,6). In this example, there is one tree that never burns, so it is not
+     * included in the time calculation.
      * 
      * 
-     * @param forest a 2d array where t represents a tree and . represents the ground
+     * @param forest a 2d array where t represents a tree and . represents the
+     *               ground
      * @param matchR The row the match is lit at
      * @param matchC The column the match is lit at
      * @return the time at which the final tree to be incinerated starts burning
@@ -38,8 +52,56 @@ public class Fire {
     public static int timeToBurn(char[][] forest, int matchR, int matchC) {
         // HINT: when adding to your BFS queue, you can include more information than
         // just a location. What other information might be useful?
+        // put other things in a queue
+        if (forest[matchR][matchC] != 't') {
+            return 0;
+        }
 
-        // Implement this AND add more tests!!!
-        return -1;
+        Queue<FireLocation> queue = new LinkedList<>();
+        queue.add(new FireLocation(matchR, matchC, 0));
+
+        boolean[][] visited = new boolean[forest.length][forest[0].length];
+
+        int maxTime = 0;
+
+        while (!queue.isEmpty()) {
+            FireLocation current = queue.poll();
+
+            if (visited[current.row()][current.col()]) {
+                continue;
+            }
+
+            visited[current.row()][current.col()] = true;
+
+            maxTime = Math.max(maxTime, current.time());
+
+            for (FireLocation neighbor : neighbors(forest, current)) {
+                queue.add(neighbor);
+            }
+        }
+        return maxTime;
+    }
+
+    public static List<FireLocation> neighbors(char[][] forest, FireLocation current) {
+        List<FireLocation> result = new ArrayList<>();
+
+        int[][] moves = new int[][] {
+                { -1, 0 }, // Up
+                { 1, 0 }, // Down
+                { 0, -1 }, // Left
+                { 0, 1 } // Right
+        };
+
+        for (int[] move : moves) {
+            int newR = current.row() + move[0];
+            int newC = current.col() + move[1];
+
+            if (newR >= 0 && newR < forest.length &&
+                    newC >= 0 && newC < forest[0].length &&
+                    forest[newR][newC] == 't') {
+                result.add(new FireLocation(newR, newC, current.time() + 1));
+            }
+        }
+        return result;
     }
 }
